@@ -1,0 +1,10 @@
+snowflake-connector-python[pandas]==3.12.3
+pandas==2.2.3
+pyarrow==17.0.0
+requests==2.32.3
+python-dotenv==1.0.1
+dbt-snowflake==1.8.4
+# dbt requires protobuf>=6; older Streamlit pins protobuf<6, so keep both current.
+protobuf>=6.0,<7.0
+streamlit==1.63.0
+altair==6.2.2

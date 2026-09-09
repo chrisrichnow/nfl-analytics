@@ -1,0 +1,18 @@
+# Credentials - never commit. .env.example is the safe template.
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# dbt build artifacts and logs (logs contain the Snowflake account hostname)
+dbt_project/.user.yml
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+logs/
+*.log

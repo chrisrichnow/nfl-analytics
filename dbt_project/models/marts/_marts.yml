@@ -1,0 +1,164 @@
+version: 2
+
+models:
+  - name: team_game_results
+    description: One row per team per game (schedules unpivoted to home+away).
+    columns:
+      - name: game_id
+        tests:
+          - not_null
+      - name: team
+        tests:
+          - not_null
+      - name: points_for
+        tests:
+          - not_null
+      - name: points_against
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - game_id
+            - team
+
+  - name: team_rankings
+    description: Season-to-date team power rankings - win %, point differential, points for/against.
+    columns:
+      - name: season
+        tests:
+          - not_null
+      - name: team
+        tests:
+          - not_null
+      - name: games_played
+        tests:
+          - not_null
+      - name: win_pct
+        tests:
+          - not_null
+      - name: power_rank
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - team
+
+  - name: player_passing_leaders
+    description: Season passing stat totals per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+      - name: passing_yards
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - player_id
+
+  - name: player_rushing_leaders
+    description: Season rushing stat totals per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+      - name: rushing_yards
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - player_id
+
+  - name: player_receiving_leaders
+    description: Season receiving stat totals per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+      - name: receiving_yards
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - player_id
+
+  - name: player_defense_leaders
+    description: Season sack (full + half credit) and interception totals per player. Not a full defensive box score - play-by-play has no tackle counts.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+      - name: sacks
+        tests:
+          - not_null
+      - name: interceptions
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - player_id
+
+  - name: player_kicking_leaders
+    description: Season field goal and extra point stats per kicker.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+      - name: fg_attempts
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - player_id
+
+  - name: player_passing_by_week
+    description: Per-game passing stats per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - week
+            - player_id
+
+  - name: player_rushing_by_week
+    description: Per-game rushing stats per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - week
+            - player_id
+
+  - name: player_receiving_by_week
+    description: Per-game receiving stats per player.
+    columns:
+      - name: player_id
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season
+            - week
+            - player_id

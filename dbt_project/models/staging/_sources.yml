@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: raw
+    database: nfl_analytics
+    schema: raw
+    tables:
+      - name: pbp
+        identifier: PBP_2025 # update to PBP_2026 once nflverse publishes it
+      - name: schedules
+        identifier: SCHEDULES
+      - name: teams
+        identifier: TEAMS
