@@ -49,6 +49,18 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Dependency snag: installing Streamlit downgraded protobuf below what dbt requires. Resolved by upgrading Streamlit to 1.63 and pinning `protobuf>=6,<7`; `pip check` is clean and both dbt and Streamlit work.
 - Verified in a real browser via Playwright across all four tabs. Fixed three layout bugs found that way: team labels being thinned to every other row, long team names truncating, and rotated week-axis labels.
 
+## 2026-09-09 — Published to GitHub
+
+- Created standalone public repo `chrisrichnow/nfl-analytics` (separate from the EA monorepo, matching how golf-de-pipeline is published). Added `projects/nfl-analytics/` to the EA `.gitignore`.
+- Scrubbed `.env.example`, which had the real Snowflake account identifier and username baked in, down to placeholders. Verified the password appears nowhere outside the ignored `.env`, and re-checked the published file list on GitHub after pushing.
+- Added `docs/snowflake_setup.sql` so the warehouse/database/schema setup is reproducible from the repo rather than living only in Snowsight worksheet history.
+
+## 2026-09-09 — Portfolio pass (matching golf-de-pipeline)
+
+- Captured five dashboard screenshots to `docs/portfolio/` and embedded them in the README, including a hero image.
+- Replaced the simple architecture flowchart with a full dbt lineage diagram (source → ingestion → raw → staging → marts → dashboard, with per-model nodes). Validated it actually renders by running Mermaid headlessly rather than assuming the syntax was right.
+- Added `docs/portfolio/resume-entry.md` (resume bullets, portfolio card, interview intro, explicit claim boundaries) and `docs/portfolio/demo-walkthrough.md` (two-minute demo script plus likely follow-up questions).
+
 ## Next up
 
 - Rerun ingestion + dbt with `NFL_SEASON=2026` once nflverse publishes the file.

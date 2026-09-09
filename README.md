@@ -1,10 +1,18 @@
 # NFL Analytics
 
-A Snowflake + dbt warehouse that turns weekly NFL play-by-play and box score data into team power rankings and individual player leaderboards, refreshed weekly through the season.
+A Snowflake + dbt warehouse that turns NFL play-by-play into team power rankings and individual player leaderboards, with a Streamlit dashboard on top and 49 dbt tests behind it.
 
-**Snowflake · dbt · SQL · Python**
+**Snowflake · dbt · SQL · Python · Streamlit**
 
-Second data engineering project, built to learn warehouse modeling and dbt as a complement to [`golf-de-pipeline`](../golf-de-pipeline/) (Postgres/Airflow ELT). Snowflake + dbt was chosen deliberately over Databricks/Spark after weighing the fit: NFL season stats run in the hundreds of thousands of rows, fully structured, batch-updated weekly - that's a warehouse-shaped problem, not a big-data one. Databricks/PySpark is queued for a future project where the data actually forces distributed processing (e.g. NYC taxi trips or NFL Next Gen Stats player-tracking data).
+![Team power rankings dashboard](docs/portfolio/dashboard-team-rankings.png)
+
+[Two-minute demo walkthrough](docs/portfolio/demo-walkthrough.md) · [Resume and portfolio copy](docs/portfolio/resume-entry.md)
+
+Second data engineering project, built to learn warehouse modeling and dbt as a complement to [golf-de-pipeline](https://github.com/chrisrichnow/golf-de-pipeline) (Postgres/Airflow ELT). Snowflake + dbt was chosen deliberately over Databricks/Spark after weighing the fit: NFL season stats run in the hundreds of thousands of rows, fully structured, batch-updated weekly - that's a warehouse-shaped problem, not a big-data one. Databricks/PySpark is queued for a future project where the data actually forces distributed processing (e.g. NYC taxi trips or NFL Next Gen Stats player-tracking data).
+
+## The problem
+
+nflverse publishes NFL play-by-play as one wide, messy table: ~370 columns, one row per play, with stats scattered across role-specific columns (`passer_player_id`, `sack_player_id`, `half_sack_1_player_id`, and so on). Nothing in it is a leaderboard. Turning that into "who leads the league in sacks" means correctly attributing every play to the right player, applying the NFL's half-sack convention, and handling a source feed that spells the same player's name two different ways mid-season. Doing that in a way that stays correct as new games land every week is the actual engineering problem.
 
 ## What is working
 
@@ -49,12 +57,48 @@ Player-game stats are **not** loaded pre-aggregated - nflverse's combined `playe
 
 ```mermaid
 flowchart LR
-    Source[nflverse Parquet releases] --> Load[Python: load_raw.py]
-    Load --> Raw[Snowflake raw schema]
-    Raw --> Staging[dbt staging: stg_pbp, stg_schedules, stg_teams]
-    Staging --> Marts[dbt marts: team_rankings, player leaderboards]
-    Marts --> Explore[SQL queries]
+    subgraph src[Source]
+        NV[nflverse<br/>Parquet releases]
+    end
+
+    subgraph load[Ingestion]
+        PY[load_raw.py<br/>Python + requests]
+    end
+
+    subgraph raw[Snowflake: raw]
+        RP[(pbp)]
+        RS[(schedules)]
+        RT[(teams)]
+    end
+
+    subgraph stg[Snowflake: staging - dbt views]
+        SP[stg_pbp]
+        SS[stg_schedules]
+        ST[stg_teams]
+    end
+
+    subgraph marts[Snowflake: marts - dbt tables]
+        TGR[team_game_results]
+        TR[team_rankings]
+        PL[player_passing / rushing /<br/>receiving_leaders]
+        PW[player_passing / rushing /<br/>receiving_by_week]
+        PD[player_defense_leaders]
+        PK[player_kicking_leaders]
+    end
+
+    APP[Streamlit dashboard]
+
+    NV --> PY --> RP & RS & RT
+    RP --> SP
+    RS --> SS
+    RT --> ST
+    SS --> TGR --> TR
+    ST --> TR
+    SP --> PL & PW & PD & PK
+    TR & PL & PW & PD & PK --> APP
 ```
+
+Season totals and per-game splits are built from the same `stg_pbp` view at different grains, so a player's weekly rows and season row can never disagree - they are the same aggregation with `week` added to the group-by.
 
 - **Load** (`ingestion/load_raw.py`): fetches PBP, schedules, and team reference Parquet files from nflverse's GitHub releases and loads them as-is into Snowflake raw tables via `write_pandas`. No transformation - this is the bronze/raw layer, preserved exactly as published. Handles a 404 gracefully (current season not yet published) instead of crashing.
 - **Staging** (`dbt_project/models/staging/`): typed, cleaned views. `stg_pbp` selects and casts the ~30 relevant columns out of nflverse's ~370-column play-by-play schema; `stg_schedules` filters to completed games only; `stg_teams` is reference data passthrough.
@@ -109,10 +153,23 @@ Launch the dashboard, then open **http://localhost:8501**:
 
 A Streamlit app (`dashboard/`) that reads the marts live from Snowflake. Four views:
 
-- **Team rankings** - point differential as a diverging bar chart (blue outscored opponents, red outscored by them), plus the full standings table with an AFC/NFC filter.
-- **Player leaders** - season leaderboards for passing, rushing, receiving, defense, and kicking, with an adjustable top-N.
-- **Player explorer** - week-by-week performance for any individual player, charted across the season (bye weeks show as gaps).
-- **Pipeline** - plain-English walkthrough of how the data gets from nflverse to these tables, plus coverage counts.
+**Team rankings** - point differential as a diverging bar chart (blue outscored opponents, red got outscored), plus full standings with an AFC/NFC filter. See the screenshot at the top of this README.
+
+**Player leaders** - season leaderboards for passing, rushing, receiving, defense, and kicking, with an adjustable top-N.
+
+![Passing leaders](docs/portfolio/dashboard-player-leaders.png)
+
+The same view switched to defense. Sacks use the NFL's half-sack convention, so split sacks show as `.5` - `player_defense_leaders` credits 1.0 for a solo sack and 0.5 to each player on a shared one.
+
+![Defensive leaders](docs/portfolio/dashboard-defense-leaders.png)
+
+**Player explorer** - week-by-week performance for any individual player. Bye weeks correctly appear as gaps rather than zeros, because the underlying weekly mart has no row for a week the player did not play.
+
+![Player explorer](docs/portfolio/dashboard-player-explorer.png)
+
+**Pipeline** - a plain-English walkthrough of how the data gets from nflverse to these tables, plus live coverage counts and an explicit statement of the known defensive-stats gap.
+
+![Pipeline tab](docs/portfolio/dashboard-pipeline.png)
 
 Query results are cached for 10 minutes (`@st.cache_data`) and the connection is held open (`@st.cache_resource`) so interacting with filters does not repeatedly wake the warehouse - the trial account is credit-metered and `nfl_wh` auto-suspends after 60 seconds idle.
 
