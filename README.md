@@ -161,7 +161,8 @@ The custom NFL Analytics interface reads existing Snowflake marts, with a ten-mi
 
 - **Season overview:** season spotlight, coverage metrics, point-differential leaders, scoring comparisons, and sortable standings.
 - **Team intelligence:** conference and name filters, accurate W-L-T records derived from game results, and team game logs.
-- **Player leaders:** passing, rushing, receiving, defense, and kicking leaderboards; metric selection, search, and weekly offensive player profiles.
+- **Player leaders:** passing, rushing, receiving, defense, and kicking leaderboards with metric selection and search.
+- **Player profiles:** ID-matched player lookup with every available stat category and a two-player comparison across a selected stat group.
 - **Behind the data:** mart inventory, coverage counts, pipeline explanation, and timestamped saved dbt test results.
 
 ![Team intelligence](docs/portfolio/gridiron/teams.png)
@@ -173,6 +174,8 @@ The custom NFL Analytics interface reads existing Snowflake marts, with a ten-mi
 ![Defensive leaders](docs/portfolio/gridiron/defense.png)
 
 ![Weekly player profile](docs/portfolio/gridiron/player.png)
+
+![Two-player comparison](docs/portfolio/gridiron/comparison.png)
 
 ![Data coverage and pipeline](docs/portfolio/gridiron/pipeline.png)
 

@@ -15,6 +15,7 @@ Open **http://localhost:8054**. The existing `.env` supplies Snowflake credentia
 - **Season overview:** season spotlight, coverage metrics, point-differential leaders, scoring scatterplot, and sortable standings.
 - **Team intelligence:** conference/search filters, W–L–T records, scoring comparisons, and team game logs.
 - **Player leaders:** searchable, sortable passing/rushing/receiving/defense/kicking boards; metric selection; player profiles and offensive weekly charts.
+- **Player profiles:** lookup across all modeled players, every available season-stat category for the selected player, and a split-screen comparison for passing, rushing, receiving, defense, or kicking.
 - **Behind the data:** model inventory, row counts, pipeline explanation, and saved dbt validation status.
 
 CSV exports include every matching leaderboard/standings row, across pagination. The data page exports the mart inventory. Weekly detail rows are visible in the player profile. Missing weeks are gaps, not fabricated zeros.
@@ -54,6 +55,8 @@ Team logo PNGs are bundled as data URLs in `app.js` using the ESPN URLs in the s
 ## Player portraits
 
 Player photos are matched to NFL GSIS IDs. The 2026 nflverse roster headshot URL is preferred; the latest player reference or ESPN image is used when no valid transparent roster image is available. Roster membership does not establish the photo capture date. Profiles distinguish the source, and the selected statistics season is independent of the portrait source.
+
+Career accolades are labeled unavailable because the current Snowflake models and nflverse identity reference do not contain verified Super Bowl, MVP, All-Pro, or Pro Bowl histories. The dashboard does not infer personal awards from team results.
 
 `assets/headshots.json` records coverage, source URLs, retrieval time, and IDs with no verified transparent photo. Available portraits are local PNGs. The importer checks real alpha transparency and saves the source bytes; it does not synthesize faces or remove backgrounds. Team logos and player photos have transparent CSS surfaces.
 

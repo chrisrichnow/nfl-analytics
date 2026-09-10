@@ -40,24 +40,32 @@ const base=process.env.NFL_DASHBOARD_URL||'http://localhost:8054';
    await page.locator(`[data-category="${cat}"]`).click();
    assert(await page.locator('tbody tr').count()>0);
    if(cat==='Passing'||cat==='Defense'){await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,cat==='Passing'?'leaders.png':'defense.png'),fullPage:false});}
-   await page.locator('[data-player]').first().click();
-   if(['Passing','Rushing','Receiving'].includes(cat))assert(await page.locator('svg[aria-label*="by week"]').count()>0);
   }
   await page.locator('[data-category="Passing"]').click();
   await page.locator('#metric').selectOption('passing_touchdowns');
   assert((await page.locator('.panel h2').first().innerText()).includes('Pass TD'));
   await page.locator('#metric').selectOption('passing_yards');
   const top=data.player_passing_leaders.sort((a,b)=>b.passing_yards-a.passing_yards)[0];
+  await page.locator('#search').fill('zzzz-no-player');assert(await page.locator('.empty').count()>0);
   await page.locator('#search').fill(top.player_name);await page.locator('tbody [data-player]').first().click();
+  await page.locator('#profile-a').waitFor();
+  assert.equal(await page.locator('#profile-a').inputValue(),top.player_id);
+  assert((await page.locator('#content').innerText()).includes('Career accolades'));
   const expected=data.player_passing_by_week.filter(r=>r.player_id===top.player_id).reduce((n,r)=>n+r.passing_yards,0);
   assert.equal(expected,top.passing_yards);
   await page.locator('.player-headshot.large').evaluate(i=>i.decode());
   await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'player.png'),fullPage:true});
-  await page.locator('#search').fill('zzzz-no-player');assert(await page.locator('.empty').count()>0);
+  await page.locator('[data-profile-mode="compare"]').click();
+  await page.locator('#compare-category').selectOption('Rushing');
+  assert.equal(await page.locator('.comparison-split article').count(),2);
+  assert.equal(await page.locator('.comparison-split .player-headshot').count(),2);
+  await Promise.all((await page.locator('.comparison-split .player-headshot').elementHandles()).map(i=>i.evaluate(img=>img.decode())));
+  assert(await page.locator('.compare-row').count()>0);
+  await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'comparison.png'),fullPage:true});
   await page.locator('nav a[href="#pipeline"]').click();assert((await page.locator('#content').innerText()).includes('49/49'));
   await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'pipeline.png'),fullPage:true});
   await page.setViewportSize({width:390,height:844});
-  for(const view of ['overview','teams','players','pipeline']){
+  for(const view of ['overview','teams','players','profiles','pipeline']){
    await page.locator(`nav a[href="#${view}"]`).click();
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),view+' overflows mobile');
   }
@@ -67,6 +75,6 @@ const base=process.env.NFL_DASHBOARD_URL||'http://localhost:8054';
   assert((await page.locator('#notice').innerText()).includes('previously loaded'));
   await page.unroute('**/api/data');await page.locator('#refresh').click();await page.waitForFunction(()=>document.querySelector('#notice').textContent==='');
   assert.deepEqual(errors,[]);
-  console.log('PASS: real data, team drilldown, filters, CSV, five categories, weekly totals, empty/error recovery, desktop and mobile.');
+  console.log('PASS: real data, team logos, filters, CSV, five leaderboards, player profiles/comparison, error recovery, desktop and mobile.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

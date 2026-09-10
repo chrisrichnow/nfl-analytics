@@ -87,3 +87,8 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Matched all 1,207 analytics players by GSIS ID against nflverse identity data and the 2026 roster reference.
 - Bundled 1,206 verified transparent source headshots: 1,079 from the 2026 roster reference and 127 latest-available fallbacks. Sal Cannella had no working transparent image at the referenced NFL/ESPN URLs and displays an explicit unavailable state.
 - Removed CSS backplates from all team logos and player portraits. Refreshed portfolio screenshots and passed browser, image-decoding, responsive-layout, export, and error-recovery checks.
+
+## 2026-09-10 - Team logos and player comparison
+- Replaced team abbreviation badges in overview and team-intelligence tables with transparent team logos.
+- Added a dedicated Player Profiles view with lookup across modeled players, all available stat categories, and split-screen comparison for five selectable stat groups.
+- Labeled career accolades unavailable because the warehouse and identity feed do not contain verified award histories. Added browser coverage and a portfolio comparison screenshot.
