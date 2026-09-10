@@ -40,7 +40,7 @@ node dashboard-web/check.cjs
 
 Override `NFL_DASHBOARD_URL` to test a different port. The browser check uses actual warehouse responses and covers filtering, CSV content, all player categories, weekly/season reconciliation for the leading passer, error recovery, and mobile width. Screenshots are written to `docs/portfolio/gridiron/`.
 
-Verified September 10, 2026: 48,771 play-by-play rows, 285 games, 32 teams; saved September 9 dbt artifact reports 49/49 passing. These are observed project data, not an independently certified NFL feed.
+Verified September 10, 2026: 342,249 play-by-play rows and 1,960 completed games across 2019–2025; the multi-season dbt run reports 49/49 passing. These are observed project data, not an independently certified NFL feed.
 
 
 ## Team identity and logo assets

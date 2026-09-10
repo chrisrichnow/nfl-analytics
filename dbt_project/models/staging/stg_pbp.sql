@@ -1,5 +1,20 @@
--- One row per play. Selects and types the columns needed for team/player
--- scoring aggregations downstream; the source table has ~370 columns total.
+-- Union raw seasons by column name before selecting the stable analytics subset.
+-- dbt_utils fills schema-drift columns with null instead of relying on column order.
+with raw_pbp as (
+    {{ dbt_utils.union_relations(
+        relations=[
+            source('raw', 'pbp_2019'),
+            source('raw', 'pbp_2020'),
+            source('raw', 'pbp_2021'),
+            source('raw', 'pbp_2022'),
+            source('raw', 'pbp_2023'),
+            source('raw', 'pbp_2024'),
+            source('raw', 'pbp_2025')
+        ],
+        source_column_name=None
+    ) }}
+)
+
 select
     play_id::number as play_id,
     game_id,
@@ -61,5 +76,5 @@ select
     epa::float as epa,
     wpa::float as wpa
 
-from {{ source('raw', 'pbp') }}
+from raw_pbp
 where game_id is not null

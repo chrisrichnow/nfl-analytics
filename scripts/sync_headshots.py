@@ -28,9 +28,13 @@ def main():
     players = {r['gsis_id']: r for r in json.loads((ROOT / 'assets/players.json').read_text())}
     folder = ROOT / 'assets/headshots'
     folder.mkdir(parents=True, exist_ok=True)
+    manifest_path = ROOT / 'assets/headshots.json'
+    existing = json.loads(manifest_path.read_text()).get('players', {}) if manifest_path.exists() else {}
 
     def download(item):
         pid, name = item
+        if existing.get(pid, {}).get('status') == 'available' and (folder / f'{pid}.png').is_file():
+            return pid, existing[pid]
         roster, player = rosters.get(pid, {}), players.get(pid, {})
         candidates = [(roster.get('headshot_url'), '2026 roster'),
                       (player.get('headshot'), 'Latest player reference')]
@@ -69,7 +73,7 @@ def main():
             if i % 100 == 0:
                 print(f'Checked {i}/{len(identities)}', flush=True)
     payload = {'retrieved_at': datetime.now(timezone.utc).isoformat(), 'players': results}
-    (ROOT / 'assets/headshots.json').write_text(json.dumps(payload, indent=2), encoding='utf-8')
+    manifest_path.write_text(json.dumps(payload, indent=2), encoding='utf-8')
     print(json.dumps({'total': len(results), 'available': sum(r['status'] == 'available' for r in results.values()),
                       'from_2026_roster': sum(r.get('source') == '2026 roster' for r in results.values()),
                       'unavailable': [r['name'] for r in results.values() if r['status'] != 'available']}), flush=True)

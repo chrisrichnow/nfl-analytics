@@ -4,11 +4,11 @@ Run `.\.venv\Scripts\python.exe dashboard-web/server.py` from the project root a
 
 | Time | Show | Explain |
 |---|---|---|
-| 0:00-0:20 | Season overview | 48,771 plays and 285 games from the loaded 2025 season, including postseason. The team spotlight uses its colors and logo. |
+| 0:00-0:20 | Season overview | 342,249 plays and 1,960 games across seven complete seasons, 2019–2025. The season selector changes every team and player view. |
 | 0:20-0:40 | Select the spotlight team | Team game logs and scoring balance. Rankings order total wins, then differential; displayed records account for ties. |
 | 0:40-1:00 | Player leaders: Passing, then Defense | Player stats are derived from raw play-by-play. Shared sacks receive half credit; defense excludes tackle counts. |
 | 1:00-1:20 | Select a passer | Weekly bars show recorded performance. Missing weeks are gaps, not zeros. Weekly yardage reconciles with the season total. |
-| 1:20-1:45 | Behind the data | Python loads raw data, dbt builds staging and marts, and the UI reads them. The saved September 9 validation run reports 49 passing tests. |
+| 1:20-1:45 | Behind the data | Python loads one raw table per season, dbt unions schema changes by column name, and 49 tests validate the resulting models. |
 | 1:45-2:00 | Search a leaderboard and export CSV | Filters operate on cached data; exports include all matching rows. Explain the practical value of making warehouse outputs easy to explore. |
 
 ## Useful follow-ups

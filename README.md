@@ -1,6 +1,6 @@
 # NFL Analytics
 
-A Snowflake + dbt warehouse that turns NFL play-by-play into team power rankings and individual player leaderboards, with an interactive NFL Analytics dashboard and 49 dbt tests behind it.
+A Snowflake + dbt warehouse that turns seven complete NFL seasons into team power rankings and individual player leaderboards, with an interactive NFL Analytics dashboard and 49 dbt tests behind it.
 
 **Snowflake · dbt · SQL · Python · Streamlit**
 
@@ -22,12 +22,12 @@ nflverse publishes NFL play-by-play as one wide, messy table: ~370 columns, one 
 
 ## What is working
 
-Dashboard data checked September 10, 2026 against the loaded 2025 season, including postseason. The saved September 9 dbt run reports 49/49 passing tests; the dashboard checks do not rerun dbt.
+Verified September 10, 2026 across the complete 2019–2025 seasons, including postseason. The multi-season rebuild and all 49 dbt tests completed successfully.
 
 | Dataset | Count |
 |---|---:|
-| Raw play-by-play rows loaded | 48,771 |
-| Completed games loaded | 285 |
+| Raw play-by-play rows loaded, 2019–2025 | 342,249 |
+| Completed games loaded, 2019–2025 | 1,960 |
 | dbt models (staging + marts) | 13 |
 | dbt tests passing | 49 / 49 |
 
@@ -135,11 +135,10 @@ Copy-Item .env.example .env
 
 Fill in your own Snowflake account, user, and password in `.env`. Then create the warehouse, database, and schemas by running `docs/snowflake_setup.sql` once in a Snowsight worksheet.
 
-Load raw data (defaults to the current year; override with `NFL_SEASON`):
+Load the verified historical range:
 
 ```powershell
-$env:NFL_SEASON = "2026"
-.\.venv\Scripts\python.exe ingestion\load_raw.py
+.\.venv\Scripts\python.exe ingestion\load_raw.py --seasons 2019-2025
 ```
 
 Build and test the dbt models. Use `run_dbt.py` rather than calling `dbt` directly with a shell-sourced `.env` - PowerShell/bash can mangle special characters in the password; this script loads `.env` straight into the subprocess environment instead:
@@ -189,7 +188,7 @@ The original Streamlit app remains in `dashboard/`. Run `.\.venv\Scripts\python.
 
 - Snowflake free trial account (30-day / credit-based) - this is a learning project, not a production deployment.
 - No live odds/betting integration; stats and rankings only, separate from the sports-trading-bot project.
-- Historical multi-season backfill is a stretch goal after the current-season pipeline is validated on live 2026 data.
+- The verified warehouse covers 2019–2025. Earlier nflverse seasons are available but not part of this project's tested source union.
 - No orchestration (Airflow/dbt Cloud scheduling) yet - reruns are manual. A stretch goal once the season is underway.
 
 ## Repository map

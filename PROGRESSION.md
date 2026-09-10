@@ -92,3 +92,8 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Replaced team abbreviation badges in overview and team-intelligence tables with transparent team logos.
 - Added a dedicated Player Profiles view with lookup across modeled players, all available stat categories, and split-screen comparison for five selectable stat groups.
 - Labeled career accolades unavailable because the warehouse and identity feed do not contain verified award histories. Added browser coverage and a portfolio comparison screenshot.
+
+## 2026-09-10 - Seven-season historical backfill
+- Refactored ingestion to accept validated season lists/ranges and load independent raw PBP tables without combining wide seasons in memory.
+- Loaded and modeled the complete 2019–2025 seasons: 342,249 plays and 1,960 games. dbt unions schema-drifted raw tables by column name.
+- All 13 models rebuilt and all 49 data tests passed. Dashboard/browser checks passed for seven selectable seasons; the transparent portrait manifest expanded to 2,899 of 2,900 modeled players.

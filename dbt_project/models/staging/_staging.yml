@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_pbp
-    description: One row per play, typed and cleaned from the raw nflverse play-by-play feed.
+    description: One row per play across 2019–2025, unioned by column name and typed from raw nflverse season tables.
     columns:
       - name: game_id
         tests:

@@ -5,8 +5,20 @@ sources:
     database: nfl_analytics
     schema: raw
     tables:
-      - name: pbp
-        identifier: PBP_2025 # update to PBP_2026 once nflverse publishes it
+      - name: pbp_2019
+        identifier: PBP_2019
+      - name: pbp_2020
+        identifier: PBP_2020
+      - name: pbp_2021
+        identifier: PBP_2021
+      - name: pbp_2022
+        identifier: PBP_2022
+      - name: pbp_2023
+        identifier: PBP_2023
+      - name: pbp_2024
+        identifier: PBP_2024
+      - name: pbp_2025
+        identifier: PBP_2025
       - name: schedules
         identifier: SCHEDULES
       - name: teams
