@@ -49,3 +49,12 @@ Single-team spotlight and game-log headers use primary/secondary colors from the
 The NFL shield is sourced from [NFL Football Operations](https://operations.nfl.com/) ([original PNG](https://static.www.nfl.com/image/upload/v1554321393/league/nvfr7ogywskqrfaiu38m.png)); `favicon.svg` embeds that unmodified PNG for the existing local asset route. Retrieved September 10, 2026.
 
 Team logo PNGs are bundled as data URLs in `app.js` using the ESPN URLs in the saved nflverse reference. Single-team spotlight and game-log panels show the matching logo; league comparisons remain neutral.
+
+
+## Player portraits
+
+Player photos are matched to NFL GSIS IDs. The 2026 nflverse roster headshot URL is preferred; the latest player reference or ESPN image is used when no valid transparent roster image is available. Roster membership does not establish the photo capture date. Profiles distinguish the source, and the selected statistics season is independent of the portrait source.
+
+`assets/headshots.json` records coverage, source URLs, retrieval time, and IDs with no verified transparent photo. Available portraits are local PNGs. The importer checks real alpha transparency and saves the source bytes; it does not synthesize faces or remove backgrounds. Team logos and player photos have transparent CSS surfaces.
+
+To refresh with the dashboard running and network access, install Pillow if necessary and run `.\.venv\Scripts\python.exe scripts/sync_headshots.py`. The script fetches the public identity references and requests display-sized PNGs from the NFL CDN. Raw identity caches are ignored by Git.

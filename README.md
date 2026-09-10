@@ -178,7 +178,7 @@ The custom NFL Analytics interface reads existing Snowflake marts, with a ten-mi
 
 [Mobile preview](docs/portfolio/gridiron/mobile.png) ? [Launch, browser checks, and data semantics](dashboard-web/README.md)
 
-CSV exports include all filtered leaderboard rows across pagination. Missing player weeks remain gaps. Player tiles stay neutral because the marts do not contain reliable team attribution. Team ranking still follows total wins, then point differential; it is not a predictive rating.
+CSV exports include all filtered leaderboard rows across pagination. Missing player weeks remain gaps. Player tiles include transparent ID-matched headshots, preferring the 2026 roster source. Portrait source and statistics season are distinct; older/latest-reference fallbacks are labeled in profiles. Player tile colors remain neutral because the marts do not contain reliable team attribution. Team ranking still follows total wins, then point differential; it is not a predictive rating.
 
 The original Streamlit app remains in `dashboard/`. Run `.\.venv\Scripts\python.exe -m streamlit run dashboard/app.py` to open it on port 8501. Earlier Streamlit screenshots are retained in `docs/portfolio/dashboard-*.png` as historical assets.
 

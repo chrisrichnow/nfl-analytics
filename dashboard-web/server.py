@@ -5,6 +5,7 @@ from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+import re
 from pathlib import Path
 import threading
 import time
@@ -72,7 +73,15 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
         files = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'),
-                 '/styles.css': ('styles.css', 'text/css'), '/favicon.svg': ('favicon.svg', 'image/svg+xml')}
+                 '/styles.css': ('styles.css', 'text/css'), '/favicon.svg': ('favicon.svg', 'image/svg+xml'),
+                 '/assets/headshots.json': ('assets/headshots.json', 'application/json')}
+        if re.fullmatch(r'/assets/headshots/00-\d{7}\.png', path):
+            asset = ROOT / path.lstrip('/')
+            if asset.is_file():
+                self.respond(200, asset.read_bytes(), 'image/png')
+            else:
+                self.respond(404, b'Not found', 'text/plain')
+            return
         if path == '/api/data':
             try:
                 self.respond(200, read_data(), 'application/json')
@@ -80,7 +89,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.respond(503, b'{"error":"Unable to read the Snowflake analytics. Check your local connection and warehouse configuration, then retry."}', 'application/json')
         elif path in files:
             name, mime = files[path]
-            self.respond(200, (ROOT / name).read_bytes(), mime)
+            asset = ROOT / name
+            if asset.is_file():
+                self.respond(200, asset.read_bytes(), mime)
+            else:
+                self.respond(404, b'Not found', 'text/plain')
         else:
             self.respond(404, b'Not found', 'text/plain')
 

@@ -20,3 +20,7 @@ dashboard-web/.snapshot.json
 
 # Local assistant handoff notes
 session-summary-*.md
+
+# Downloaded identity reference caches (published metadata is headshots.json)
+dashboard-web/assets/players.json
+dashboard-web/assets/roster2026.json

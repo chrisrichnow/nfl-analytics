@@ -8,3 +8,4 @@ dbt-snowflake==1.8.4
 protobuf>=6.0,<7.0
 streamlit==1.63.0
 altair==6.2.2
+Pillow==11.0.0

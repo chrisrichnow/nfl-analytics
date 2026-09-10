@@ -82,3 +82,8 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Renamed the dashboard NFL Analytics; bundled NFL shield and team logos, and scoped team colors/logos to single-team panels.
 - Refreshed eight screenshots for the final design and updated the README, demo walkthrough, and portfolio copy.
 - Browser verification passed, including successful logo decoding for all 32 loaded teams, responsive views, exports, and error recovery.
+
+## 2026-09-10 - Transparent player portraits
+- Matched all 1,207 analytics players by GSIS ID against nflverse identity data and the 2026 roster reference.
+- Bundled 1,206 verified transparent source headshots: 1,079 from the 2026 roster reference and 127 latest-available fallbacks. Sal Cannella had no working transparent image at the referenced NFL/ESPN URLs and displays an explicit unavailable state.
+- Removed CSS backplates from all team logos and player portraits. Refreshed portfolio screenshots and passed browser, image-decoding, responsive-layout, export, and error-recovery checks.
