@@ -57,6 +57,7 @@ const base=process.env.NFL_DASHBOARD_URL||'http://localhost:8054';
   await page.locator('#profile-a').waitFor();
   assert.equal(await page.locator('#profile-a').inputValue(),top.player_id);
   assert((await page.locator('#content').innerText()).includes('Career accolades'));
+  assert(!(await page.locator('#content').innerText()).includes(' ? '));
   const expected=data.player_passing_by_week.filter(r=>Number(r.season)===currentSeason&&r.player_id===top.player_id).reduce((n,r)=>n+r.passing_yards,0);
   assert.equal(expected,top.passing_yards);
   await page.locator('.player-headshot.large').evaluate(i=>i.decode());
@@ -65,6 +66,11 @@ const base=process.env.NFL_DASHBOARD_URL||'http://localhost:8054';
   await page.locator('#compare-category').selectOption('Rushing');
   assert.equal(await page.locator('.comparison-split article').count(),2);
   assert.equal(await page.locator('.comparison-split .player-headshot').count(),2);
+  const comparisonText=await page.locator('.comparison-split').innerText();
+  assert(!comparisonText.includes('\ufffd'));
+  assert(!/\b[A-Z]{2,3}\s+\?\s+2026 roster/.test(comparisonText));
+  assert(comparisonText.includes('LA | 2026 roster'));
+  assert(comparisonText.includes('NE | 2026 roster'));
   await Promise.all((await page.locator('.comparison-split .player-headshot').elementHandles()).map(i=>i.evaluate(img=>img.decode())));
   assert(await page.locator('.compare-row').count()>0);
   await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'comparison.png'),fullPage:true});
@@ -74,6 +80,7 @@ const base=process.env.NFL_DASHBOARD_URL||'http://localhost:8054';
   for(const view of ['overview','teams','players','profiles','pipeline']){
    await page.locator(`nav a[href="#${view}"]`).click();
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),view+' overflows mobile');
+   assert(!(await page.locator('body').innerText()).includes('\ufffd'),view+' contains a malformed character');
   }
   await page.locator('nav a[href="#overview"]').click();await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:path.join(out,'mobile.png'),fullPage:true});
   await page.route('**/api/data',route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:'Test connection unavailable'})}));

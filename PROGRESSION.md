@@ -97,3 +97,9 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Refactored ingestion to accept validated season lists/ranges and load independent raw PBP tables without combining wide seasons in memory.
 - Loaded and modeled the complete 2019–2025 seasons: 342,249 plays and 1,960 games. dbt unions schema-drifted raw tables by column name.
 - All 13 models rebuilt and all 49 data tests passed. Dashboard/browser checks passed for seven selectable seasons; the transparent portrait manifest expanded to 2,899 of 2,900 modeled players.
+
+
+## 2026-09-10 - Character rendering cleanup
+- Replaced dashboard punctuation and icon glyphs that could render as question marks with ASCII-safe labels and separators.
+- Corrected player roster badges to display `LA | 2026 roster` and `NE | 2026 roster`, and refreshed all portfolio screenshots.
+- Added browser assertions for malformed replacement characters and roster badge question marks; the complete dashboard check passes on desktop and mobile.
