@@ -100,6 +100,34 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 
 
 ## 2026-09-10 - Character rendering cleanup
-- Replaced dashboard punctuation and icon glyphs that could render as question marks with ASCII-safe labels and separators.
-- Corrected player roster badges to display `LA | 2026 roster` and `NE | 2026 roster`, and refreshed all portfolio screenshots.
+- Replaced corrupted question-mark separators in player profile and comparison labels with clean pipe separators.
+- Corrected player roster badges to display `LA | 2026 roster` and `NE | 2026 roster`, and refreshed the affected portfolio screenshots.
 - Added browser assertions for malformed replacement characters and roster badge question marks; the complete dashboard check passes on desktop and mobile.
+
+## Session Summary
+
+**Date:** 2026-09-10
+**Focus:** Turn the NFL data engineering project into a polished employer-facing analytics dashboard and expand its historical coverage.
+
+### What Got Done
+- Built and refined the custom NFL Analytics dashboard with season overview, team intelligence, five player leaderboards, player profiles, player comparisons, pipeline documentation, responsive layouts, and filtered CSV exports.
+- Applied the NFL visual theme, NFL shield, all 32 transparent team logos, team-specific colors, and transparent player portraits. The portrait manifest covers 2,899 of 2,900 modeled players.
+- Backfilled and modeled the 2019-2025 seasons in Snowflake: 342,249 plays and 1,960 games across all 32 teams.
+- Rebuilt all 13 dbt models and passed all 49 data tests. The browser suite passes across all seven seasons, desktop and mobile views, filters, exports, image decoding, player comparison, and error recovery.
+- Refreshed the repository portfolio screenshots and pushed all completed work through commit `c885aaf`.
+
+### Decisions Made
+- Use 2019 as the historical starting point, giving the dashboard seven complete seasons through 2025.
+- Keep team colors and logos on panels dedicated to one team; retain the shared NFL theme for league-wide panels.
+- Show accolade data as unavailable until a verified award source is added rather than inferring MVPs, Super Bowls, All-Pro selections, or Pro Bowls.
+- Use the 2026 roster reference for current team labels and portraits while clearly labeling selected-season statistics separately.
+
+### Open Items / Next Steps
+- Load and model the 2026 season after nflverse publishes the source file.
+- Add a verified accolades source if career awards are needed in player profiles.
+- Sal Cannella remains the only modeled player without a verified transparent portrait.
+- Optional engineering improvements: automate scheduled refreshes, publish dbt documentation, and fix the cosmetic `dbt_utils.unique_combination_of_columns` deprecation warning.
+
+### Memory Updates
+- Preferences learned: Chris prefers an NFL navy/red presentation, team branding only on team-specific panels, transparent logos and portraits, and clean employer-facing visuals without malformed glyphs.
+- Decisions to log: historical dashboard coverage begins with 2019; unverified accolades remain explicitly unavailable.
