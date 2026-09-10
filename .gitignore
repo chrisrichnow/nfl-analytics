@@ -16,3 +16,7 @@ dbt_project/dbt_packages/
 dbt_project/logs/
 logs/
 *.log
+dashboard-web/.snapshot.json
+
+# Local assistant handoff notes
+session-summary-*.md

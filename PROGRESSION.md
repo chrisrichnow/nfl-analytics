@@ -66,3 +66,19 @@ Started as "second DE project, try Databricks/Spark." Rethought against the actu
 - Rerun ingestion + dbt with `NFL_SEASON=2026` once nflverse publishes the file.
 - Fix cosmetic `dbt_utils.unique_combination_of_columns` deprecation warning (args should nest under `arguments:`).
 - Optional stretch: orchestration (weekly scheduled rerun), dbt docs site, multi-season historical backfill.
+
+## 2026-09-10 ? Gridiron dashboard (working changes)
+- Added custom NFL dashboard with live cached Snowflake reads, overview/team/player/pipeline views, weekly profiles, CSV, and responsive styling.
+- Verified against real warehouse data; browser checks passed for filters, export, player categories, weekly totals, error recovery, and mobile layout. Screenshots and launch guide included. Existing Streamlit app retained.
+
+## 2026-09-10 ? NFL visual theme refresh
+- At Chris's request, replaced golf-like greens with navy, red, white, a dark navigation rail, football icon, and scoreboard typography. Updated chart colors and conference legend. Browser checks passed.
+
+## 2026-09-10 - Team identity tiles and NFL shield
+- Added nflverse primary/secondary team colors to single-team spotlights and game-log headers, with contrast-aware text. Shared league panels retain the dashboard theme.
+- Replaced the app icon with the NFL-hosted shield asset and documented asset sources. Browser checks passed; NFL image load and team detail styling verified.
+
+## 2026-09-10 - Final NFL Analytics portfolio presentation
+- Renamed the dashboard NFL Analytics; bundled NFL shield and team logos, and scoped team colors/logos to single-team panels.
+- Refreshed eight screenshots for the final design and updated the README, demo walkthrough, and portfolio copy.
+- Browser verification passed, including successful logo decoding for all 32 loaded teams, responsive views, exports, and error recovery.

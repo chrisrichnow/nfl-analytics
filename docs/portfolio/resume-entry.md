@@ -2,22 +2,22 @@
 
 ## Resume entry
 
-**NFL Analytics Warehouse** | Snowflake, dbt, SQL, Python, Streamlit
+**NFL Analytics Warehouse** | Snowflake, dbt, SQL, Python, JavaScript
 
 - Built an ELT pipeline loading 48,771 play-by-play rows across 285 games into Snowflake, then modeled them with dbt into 13 layered models covering team power rankings and player stats at both season and per-game grain.
 - Derived all player statistics from raw play-by-play rather than pre-aggregated source tables, correctly attributing passing, rushing, receiving, kicking, and defensive plays - including the NFL's half-sack convention - across 105 passers, 339 rushers, 509 receivers, and 560 defenders.
 - Wrote 49 dbt tests covering not-null and uniqueness constraints, composite-key uniqueness, and referential integrity; those tests caught a source data-quality defect where inconsistent player-name spellings were splitting leaderboard rows, resolved by keying on player ID and resolving names with `MODE()`.
-- Built a Streamlit dashboard reading the marts live from Snowflake, with query caching and warehouse auto-suspend to control credit consumption on a metered account.
+- Built an interactive NFL Analytics dashboard over Snowflake marts, with team and player drilldowns, filtered CSV exports, responsive layouts, and ten-minute query caching.
 
 ## Short version
 
-Built a Snowflake + dbt warehouse turning 48,771 NFL play-by-play rows into tested team and player analytics, with 49 dbt tests and a live Streamlit dashboard.
+Built a Snowflake + dbt warehouse turning 48,771 NFL play-by-play rows into tested team and player analytics, with 49 dbt tests and a interactive analytics dashboard.
 
 ## Portfolio card
 
 **Title:** NFL Analytics Warehouse
 
-**Description:** A Snowflake and dbt pipeline that turns raw NFL play-by-play into team power rankings and player leaderboards across offense, defense, and kicking. Includes layered staging and mart models, 49 data-quality tests, and a live Streamlit dashboard.
+**Description:** A Snowflake and dbt pipeline that turns raw NFL play-by-play into team power rankings and player leaderboards across offense, defense, and kicking. Includes layered staging and mart models, 49 data-quality tests, and a interactive analytics dashboard.
 
 **Tags:** Snowflake · dbt · SQL · Python · Streamlit · Data quality · Dimensional modeling
 

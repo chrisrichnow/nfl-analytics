@@ -1,10 +1,16 @@
 # NFL Analytics
 
-A Snowflake + dbt warehouse that turns NFL play-by-play into team power rankings and individual player leaderboards, with a Streamlit dashboard on top and 49 dbt tests behind it.
+A Snowflake + dbt warehouse that turns NFL play-by-play into team power rankings and individual player leaderboards, with an interactive NFL Analytics dashboard and 49 dbt tests behind it.
 
 **Snowflake · dbt · SQL · Python · Streamlit**
 
-![Team power rankings dashboard](docs/portfolio/dashboard-team-rankings.png)
+## NFL Analytics portfolio dashboard
+
+The custom **NFL Analytics** dashboard adds a polished season overview, team scoring comparisons and game logs, five player leaderboards, weekly player profiles, CSV exports, and a transparent warehouse coverage page. Verified against the existing Snowflake data on September 10, 2026, including desktop/mobile browser checks.
+
+![NFL Analytics season overview](docs/portfolio/gridiron/overview.png)
+
+Run `.\.venv\Scripts\python.exe dashboard-web/server.py` from this project and open **http://localhost:8054**. [Dashboard instructions and data caveats](dashboard-web/README.md). The original Streamlit app below is still available.
 
 [Two-minute demo walkthrough](docs/portfolio/demo-walkthrough.md) · [Resume and portfolio copy](docs/portfolio/resume-entry.md)
 
@@ -16,7 +22,7 @@ nflverse publishes NFL play-by-play as one wide, messy table: ~370 columns, one 
 
 ## What is working
 
-Verified September 9, 2026, validated against the completed 2025 season (the 2026 season starts tonight; nflverse typically publishes each season's file a day or so after week 1 - rerun ingestion with `NFL_SEASON=2026` once it's live):
+Dashboard data checked September 10, 2026 against the loaded 2025 season, including postseason. The saved September 9 dbt run reports 49/49 passing tests; the dashboard checks do not rerun dbt.
 
 | Dataset | Count |
 |---|---:|
@@ -86,7 +92,7 @@ flowchart LR
         PK[player_kicking_leaders]
     end
 
-    APP[Streamlit dashboard]
+    APP[NFL Analytics dashboard]
 
     NV --> PY --> RP & RS & RT
     RP --> SP
@@ -143,35 +149,38 @@ Build and test the dbt models. Use `run_dbt.py` rather than calling `dbt` direct
 .\.venv\Scripts\python.exe run_dbt.py test
 ```
 
-Launch the dashboard, then open **http://localhost:8501**:
+Launch the featured dashboard, then open **http://localhost:8054**:
 
 ```powershell
-.\.venv\Scripts\python.exe -m streamlit run dashboard\app.py
+.\.venv\Scripts\python.exe dashboard-web/server.py
 ```
 
 ## Dashboard
 
-A Streamlit app (`dashboard/`) that reads the marts live from Snowflake. Four views:
+The custom NFL Analytics interface reads existing Snowflake marts, with a ten-minute cache. It uses navy, red, and white for league-wide views; single-team spotlights and game-log headers use that team's colors and logo.
 
-**Team rankings** - point differential as a diverging bar chart (blue outscored opponents, red got outscored), plus full standings with an AFC/NFC filter. See the screenshot at the top of this README.
+- **Season overview:** season spotlight, coverage metrics, point-differential leaders, scoring comparisons, and sortable standings.
+- **Team intelligence:** conference and name filters, accurate W-L-T records derived from game results, and team game logs.
+- **Player leaders:** passing, rushing, receiving, defense, and kicking leaderboards; metric selection, search, and weekly offensive player profiles.
+- **Behind the data:** mart inventory, coverage counts, pipeline explanation, and timestamped saved dbt test results.
 
-**Player leaders** - season leaderboards for passing, rushing, receiving, defense, and kicking, with an adjustable top-N.
+![Team intelligence](docs/portfolio/gridiron/teams.png)
 
-![Passing leaders](docs/portfolio/dashboard-player-leaders.png)
+![Team colors and logo in the game-log panel](docs/portfolio/gridiron/team-detail.png)
 
-The same view switched to defense. Sacks use the NFL's half-sack convention, so split sacks show as `.5` - `player_defense_leaders` credits 1.0 for a solo sack and 0.5 to each player on a shared one.
+![Player leaders](docs/portfolio/gridiron/leaders.png)
 
-![Defensive leaders](docs/portfolio/dashboard-defense-leaders.png)
+![Defensive leaders](docs/portfolio/gridiron/defense.png)
 
-**Player explorer** - week-by-week performance for any individual player. Bye weeks correctly appear as gaps rather than zeros, because the underlying weekly mart has no row for a week the player did not play.
+![Weekly player profile](docs/portfolio/gridiron/player.png)
 
-![Player explorer](docs/portfolio/dashboard-player-explorer.png)
+![Data coverage and pipeline](docs/portfolio/gridiron/pipeline.png)
 
-**Pipeline** - a plain-English walkthrough of how the data gets from nflverse to these tables, plus live coverage counts and an explicit statement of the known defensive-stats gap.
+[Mobile preview](docs/portfolio/gridiron/mobile.png) ? [Launch, browser checks, and data semantics](dashboard-web/README.md)
 
-![Pipeline tab](docs/portfolio/dashboard-pipeline.png)
+CSV exports include all filtered leaderboard rows across pagination. Missing player weeks remain gaps. Player tiles stay neutral because the marts do not contain reliable team attribution. Team ranking still follows total wins, then point differential; it is not a predictive rating.
 
-Query results are cached for 10 minutes (`@st.cache_data`) and the connection is held open (`@st.cache_resource`) so interacting with filters does not repeatedly wake the warehouse - the trial account is credit-metered and `nfl_wh` auto-suspends after 60 seconds idle.
+The original Streamlit app remains in `dashboard/`. Run `.\.venv\Scripts\python.exe -m streamlit run dashboard/app.py` to open it on port 8501. Earlier Streamlit screenshots are retained in `docs/portfolio/dashboard-*.png` as historical assets.
 
 ## Scope and limitations
 
@@ -190,6 +199,8 @@ dbt_project/
   models/marts/     team_game_results, team_rankings, player_*_leaders, player_*_by_week, player_defense_leaders, player_kicking_leaders + tests
   macros/           generate_schema_name override (clean schema names)
   packages.yml      dbt_utils (composite-key uniqueness tests)
+dashboard-web/     Featured NFL Analytics UI, cached local server, browser checks
+docs/portfolio/    Current screenshots, demo walkthrough, and portfolio copy
 dashboard/
   app.py            Streamlit UI - rankings, leaderboards, player explorer, pipeline
   queries.py        Cached read-only Snowflake access
